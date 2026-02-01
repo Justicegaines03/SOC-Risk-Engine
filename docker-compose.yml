@@ -1,0 +1,41 @@
+version: "3"
+services:
+  # 1. The Database (Cassandra)
+  cassandra:
+    image: cassandra:3.11
+    volumes:
+      - cassandradata:/var/lib/cassandra
+    ports:
+      - "9042:9042"
+
+  # 2. The Search Engine (Elasticsearch)
+  elasticsearch:
+    image: elasticsearch:7.11.1
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearchdata:/usr/share/elasticsearch/data
+
+  # 3. TheHive (The Application)
+  thehive:
+    image: thehiveproject/thehive:4.1.19
+    depends_on:
+      - cassandra
+      - elasticsearch
+    ports:
+      - "9000:9000"
+    environment:
+      - THP_ZENKO_GO_URL=http://zenko:8002
+    command:
+      - --no-config-db
+      - --cql-hostnames
+      - cassandra
+      - --index-backend
+      - elasticsearch
+      - --es-hostnames
+      - elasticsearch
+
+volumes:
+  cassandradata:
+  elasticsearchdata:
