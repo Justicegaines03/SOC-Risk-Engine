@@ -1,0 +1,4 @@
+thehive4py==1.8.1
+pandas
+requests
+
