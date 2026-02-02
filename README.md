@@ -1,4 +1,4 @@
-# TSOC Risk Engine
+# SOC Risk Engine
 
 A platform to quantify risk powered by TheHive for incident response and case management.
 
@@ -11,18 +11,29 @@ A platform to quantify risk powered by TheHive for incident response and case ma
 
 1. **Start Docker Desktop** and ensure the whale icon in your menu bar is steady (not animating)
 
-2. **Start all services:**
+2. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and set your secret key:
+   ```bash
+   # Generate a secret key
+   openssl rand -base64 32
+   ```
+   Paste the generated key as `THEHIVE_SECRET` in `.env`
+
+3. **Start all services:**
    ```bash
    docker-compose up -d
    ```
 
-3. **Wait for initialization** (~1-2 minutes on first run):
+4. **Wait for initialization** (~1-2 minutes on first run):
    ```bash
    docker-compose logs -f thehive
    ```
    Wait until you see the application is ready.
 
-4. **Access TheHive:** Open http://localhost:9000
+5. **Access TheHive:** Open http://localhost:9000
 
 ## Default Credentials
 
@@ -37,8 +48,13 @@ A platform to quantify risk powered by TheHive for incident response and case ma
 | Service       | Port | Description                          |
 |---------------|------|--------------------------------------|
 | TheHive       | 9000 | Incident response platform           |
+| Cortex        | 9001 | Analysis engine                      |
 | Cassandra     | 9042 | Database backend                     |
 | Elasticsearch | 9200 | Search and indexing engine           |
+
+## MISP Integration
+
+To connect TheHive to your existing MISP instance, see [docs/MISP-INTEGRATION.md](docs/MISP-INTEGRATION.md).
 
 ## Common Commands
 
@@ -86,12 +102,17 @@ docker-compose up -d
 ┌─────────────────────────────────────────────────┐
 │                   TheHive                       │
 │              (localhost:9000)                   │
-└─────────────────┬───────────────┬───────────────┘
-                  │               │
-        ┌─────────▼─────┐   ┌─────▼─────────────┐
-        │   Cassandra   │   │  Elasticsearch    │
-        │   (Database)  │   │  (Search Index)   │
-        └───────────────┘   └───────────────────┘
+└───────┬───────────────┬───────────────┬─────────┘
+        │               │               │
+┌───────▼─────┐   ┌─────▼─────────┐   ┌─▼───────────┐
+│  Cassandra  │   │ Elasticsearch │   │   Cortex    │
+│  (Database) │   │ (Search Index)│   │  (Analysis) │
+└─────────────┘   └───────────────┘   └─────────────┘
+                                             │
+                                      ┌──────▼──────┐
+                                      │    MISP     │
+                                      │  (External) │
+                                      └─────────────┘
 ```
 
 ## License

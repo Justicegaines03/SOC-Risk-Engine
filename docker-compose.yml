@@ -78,7 +78,7 @@ services:
       - --es-hostnames
       - elasticsearch
       - --secret
-      - "SuperSecretKeyForTheHive2026RiskEngine!"
+      - "${THEHIVE_SECRET:?THEHIVE_SECRET must be set in .env file}"
       - --cortex-hostnames
       - cortex
       - --cortex-port
