@@ -84,6 +84,25 @@ services:
       - --cortex-port
       - "9001"
 
+  # 5. Risk Engine (uncomment when ready)
+  # risk_engine:
+  #   build: ./risk_engine
+  #   container_name: risk_engine
+  #   restart: unless-stopped
+  #   depends_on:
+  #     thehive:
+  #       condition: service_started
+  #     cortex:
+  #       condition: service_started
+  #   environment:
+  #     - THEHIVE_URL=http://thehive:9000
+  #     - THEHIVE_API_KEY=${THEHIVE_API_KEY}
+  #     - CORTEX_URL=http://cortex:9001
+  #     - CORTEX_API_KEY=${CORTEX_API_KEY}
+  #     - WATCH_INTERVAL=30
+  #   # Default command is "watch"; override to score a single case:
+  #   # command: ["score", "--case-id", "~123456"]
+
 volumes:
   cassandradata:
   elasticsearchdata:
