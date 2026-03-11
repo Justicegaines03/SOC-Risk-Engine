@@ -5,7 +5,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY . /app/risk_engine
 
 ENTRYPOINT ["python", "-m", "risk_engine"]
 CMD ["watch"]

@@ -74,7 +74,6 @@ class TheHiveClient:
                     "_field": "status",
                     "_value": "New",
                 },
-                {"_name": "sort", "_fields": [{"_name": "startDate", "_order": "desc"}]},
             ]
         }
         cases = self._request("POST", "/api/v1/query", json=query)

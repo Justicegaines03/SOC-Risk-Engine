@@ -2,7 +2,6 @@ services:
   # 1. The Database (Cassandra)
   cassandra:
     image: cassandra:4.1
-    container_name: cassandra
     restart: unless-stopped
     volumes:
       - cassandradata:/var/lib/cassandra
@@ -17,12 +16,13 @@ services:
   # 2. The Search Engine (Elasticsearch)
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.24
-    container_name: elasticsearch
     restart: unless-stopped
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
     volumes:
       - elasticsearchdata:/usr/share/elasticsearch/data
     healthcheck:
@@ -34,7 +34,6 @@ services:
   # 3. Cortex (Analysis Engine)
   cortex:
     image: thehiveproject/cortex:3.1.8
-    container_name: cortex
     restart: unless-stopped
     depends_on:
       elasticsearch:
@@ -56,7 +55,6 @@ services:
   # 4. TheHive 5 (The Application)
   thehive:
     image: strangebee/thehive:5.4
-    container_name: thehive
     restart: unless-stopped
     depends_on:
       cassandra:
@@ -99,7 +97,6 @@ services:
   # 5. Risk Engine (Scoring Service)
   risk_engine:
     build: ./risk_engine
-    container_name: risk_engine
     restart: unless-stopped
     depends_on:
       thehive:

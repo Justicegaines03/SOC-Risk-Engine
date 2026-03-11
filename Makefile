@@ -35,9 +35,9 @@ status: ## Show service status and health
 	@$(COMPOSE) ps
 	@echo ""
 	@echo "=== Health Checks ==="
-	@echo -n "TheHive  (9000): " && (curl -sf http://localhost:9000/api/status > /dev/null 2>&1 && echo "OK" || echo "UNREACHABLE")
-	@echo -n "Cortex   (9001): " && (curl -sf http://localhost:9001/api/status > /dev/null 2>&1 && echo "OK" || echo "UNREACHABLE")
-	@echo -n "Elastic  (9200): " && (curl -sf http://localhost:9200/_cluster/health > /dev/null 2>&1 && echo "OK" || echo "UNREACHABLE")
+	@printf "TheHive  (9000): " && (curl -sf http://localhost:9000/api/status > /dev/null 2>&1 && echo "OK" || echo "UNREACHABLE")
+	@printf "Cortex   (9001): " && (curl -sf http://localhost:9001/api/status > /dev/null 2>&1 && echo "OK" || echo "UNREACHABLE")
+	@printf "Elastic  (9200): " && (curl -sf http://localhost:9200/_cluster/health > /dev/null 2>&1 && echo "OK" || echo "UNREACHABLE")
 
 .PHONY: logs
 logs: ## Tail logs for all services
